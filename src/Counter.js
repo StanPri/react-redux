@@ -1,10 +1,14 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux'
 
 export default function Counter() {
+
+  const counter = useSelector(state => state.counter.value)
+  const dispatch = useDispatch()
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+      <Text>Open up App.js to start working on your app! {counter}</Text>
       <StatusBar style="auto" />
     </View>
   );
