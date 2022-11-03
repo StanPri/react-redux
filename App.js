@@ -1,5 +1,5 @@
 import { Provider } from 'react-redux';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, Text, StyleSheet, Button, Image } from 'react-native';
 import Counter from './src/Counter';
 import { configureStore, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios';
@@ -37,19 +37,23 @@ const store = configureStore({
 
 export default function App() {
 
+  const [users, setUsers] = React.useState([]);
 
+const getUsers = async () => {
+  await axios.get('https://randomuser.me/api/')
+  .then(({data}) => {
 
+    const formattedUser = JSON.stringify(data.results, null, 2);
+     console.log(formattedUser)
 
-  const [user, setUser] = React.useState('');
-
-const getUsers = () => {
-  axios.get('https://randomuser.me/api/')
-  .then(user => {
-    setUser(JSON.stringify(user))
+    
+    setUsers(data.results)
   })
+  .catch(error => {console.error(error)})
 }
 
   React.useEffect(() => {
+    getUsers();
   }, [])
 
   const [incrementer, setIncrementer] = React.useState(0)
@@ -60,8 +64,22 @@ const getUsers = () => {
 
   return (
     <Provider store={store}>
+
       <View style={styles.container}>
-        <Text>{user}</Text>
+        {/* <Text>{JSON.stringify(users, null, 2)}</Text> */}
+        {users.map((user) => (
+          <View key={user.login.uuid}>
+            <Text>First name: {user.name.first}</Text>
+            <Text>Last name: {user.name.last}</Text>
+            <Image
+              style={{ width: 50, height: 50}}
+              source={{
+                uri: user.picture.thumbnail,
+              }}
+            />
+          </View>
+        ))
+        }
         <Button style={{position: "fixed"}} onPress={handleOnPress} title="Up"/>
       </View>
       {/* <Counter/> */}
