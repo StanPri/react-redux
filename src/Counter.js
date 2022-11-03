@@ -16,6 +16,7 @@ export default function Counter() {
 
 const styles = StyleSheet.create({
   container: {
+    flexDirection: 'row',
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',

@@ -1,6 +1,10 @@
 import { Provider } from 'react-redux';
+import { View, Text, StyleSheet, Button } from 'react-native';
 import Counter from './src/Counter';
 import { configureStore, createSlice } from '@reduxjs/toolkit'
+import axios from 'axios';
+
+import * as React from 'react';
 
 
 const counterSlice = createSlice({
@@ -31,12 +35,43 @@ const store = configureStore({
   }
 })
 
+const getUsers = () => {
+  axios.get('https://randomuser.me/api/')
+  .then(user => {
+    setUser(JSON.stringify(user))
+  })
+}
+
 
 export default function App() {
+
+  const [user, setUser] = React.useState();
+
+  React.useEffect(() => {
+  }, [])
+
+  const [incrementer, setIncrementer] = React.useState(0)
+
+  const handleOnPress = () => {
+    getUsers()
+  }
+
   return (
     <Provider store={store}>
-      <Counter/>
+      <View style={styles.container}>
+        <Text>Incrementer: {user}</Text>
+        <Button style={{position: "fixed"}} onPress={handleOnPress} title="Up"/>
+      </View>
+      {/* <Counter/> */}
     </Provider>
-    
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'column',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
+});
