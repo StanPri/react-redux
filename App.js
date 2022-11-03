@@ -35,17 +35,19 @@ const store = configureStore({
   }
 })
 
+export default function App() {
+
+
+
+
+  const [user, setUser] = React.useState('');
+
 const getUsers = () => {
   axios.get('https://randomuser.me/api/')
   .then(user => {
     setUser(JSON.stringify(user))
   })
 }
-
-
-export default function App() {
-
-  const [user, setUser] = React.useState();
 
   React.useEffect(() => {
   }, [])
@@ -59,7 +61,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <View style={styles.container}>
-        <Text>Incrementer: {user}</Text>
+        <Text>{user}</Text>
         <Button style={{position: "fixed"}} onPress={handleOnPress} title="Up"/>
       </View>
       {/* <Counter/> */}
