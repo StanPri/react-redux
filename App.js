@@ -38,43 +38,45 @@ const store = configureStore({
 export default function App() {
 
   const [users, setUsers] = React.useState([]);
+  const [pageNumber, setPage] = React.useState(0);
 
-const getUsers = async () => {
-  await axios.get('https://randomuser.me/api/')
+const getUsers = async (page = 0) => {
+  return await axios.get(`https://randomuser.me/api?page=${page}`)
   .then(({data}) => {
 
     const formattedUser = JSON.stringify(data.results, null, 2);
      console.log(formattedUser)
 
-    
-    setUsers(data.results)
+    return data.results;
   })
   .catch(error => {console.error(error)})
 }
 
   React.useEffect(() => {
-    getUsers();
+    getUsers().then((result)=> {
+      setUsers(result)
+    });
   }, [])
 
-  const [incrementer, setIncrementer] = React.useState(0)
-
   const handleOnPress = () => {
-    getUsers()
+    setPage(pageNumber+1)
+    getUsers(pageNumber).then(result => {
+      setUsers([...users, ...result])
+    })
   }
 
   return (
     <Provider store={store}>
 
       <View style={styles.container}>
-        {/* <Text>{JSON.stringify(users, null, 2)}</Text> */}
         {users.map((user) => (
           <View key={user.login.uuid}>
             <Text>First name: {user.name.first}</Text>
             <Text>Last name: {user.name.last}</Text>
             <Image
-              style={{ width: 50, height: 50}}
+              style={{ width: 100, height: 100}}
               source={{
-                uri: user.picture.thumbnail,
+                uri: user.picture.large,
               }}
             />
           </View>
